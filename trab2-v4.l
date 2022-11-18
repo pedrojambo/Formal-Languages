@@ -32,7 +32,7 @@ FLOAT               float
 TRUE                true
 FALSE               false
 OUTROS              [\=\(\)\{\}\;\,\:]
-ESPACO              " "
+ESPACO              " *"
 NEWLINE             "\n"
 
 %%
@@ -64,14 +64,11 @@ NEWLINE             "\n"
 int main(int argc, char *argv[])
 {
     yyin = fopen(argv[1], "r");
-    yylex();
-    fclose(yyin);
     TOKEN tk;
     while ( 1 ) {
         tk = (TOKEN) yylex();
         switch (tk){
             case eof:
-            printf("\n  ACHOU END OF FILE \n");
             return 0;
             case espaco:
             col+=yyleng;
@@ -152,4 +149,3 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
-
