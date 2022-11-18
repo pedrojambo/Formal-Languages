@@ -28,7 +28,6 @@ OPERADOR_SUBTRACAO   \-
 OPERADOR_IGUALDADE  \=\=
 OPERADOR_DIFERENCA  \!\=
 COMENTARIO_1        \/\/[^\n\r]+?(?:\*\)|[\n\r])
-COMENTARIO_2        /\*.*?\*/
 WHILE               while  
 IF                  if
 ELSE                else
@@ -74,13 +73,18 @@ INVALIDO            (.)
 {FALSE}                 { return bool_false; }
 {IDENTIFICADOR}         { return id; }
 
-"/*"                        {   count=linha; BEGIN(MultipleLinesComment); strcat(comentario_multilinha, yytext); }
+"/*"                        { for(int i = 0;i<strlen(comentario_multilinha);i++){
+                                comentario_multilinha[i]='\0';
+                            }   count=linha; BEGIN(MultipleLinesComment); strcat(comentario_multilinha, yytext); }
 <MultipleLinesComment>.      strcat(comentario_multilinha, yytext);
 <MultipleLinesComment>"\n"   linha++; strcat(comentario_multilinha, yytext);
 <MultipleLinesComment>"*/"   strcat(comentario_multilinha, yytext);{
-                            printf("\nToken: %s \n\nTipo: comentario multilinha | Linha: %d até linha %d\n", comentario_multilinha, count, linha);
-                            count=0;
                             BEGIN(INITIAL);
+                            return comentario_2;
+                            for(int i = 0;i<strlen(comentario_multilinha);i++){
+                                comentario_multilinha[i]='\0';
+                            }
+                            count=0;
                         }
 
 {COMENTARIO_1}          { return comentario_1; }
@@ -141,7 +145,12 @@ int main(int argc, char *argv[])
             case comentario_1:
             printf("\nToken: %s | Tipo: comentario de uma linha | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
             coluna+=yyleng;
-            break;             
+            linha++;
+            break;  
+            case comentario_2:
+            printf("\nToken: %s \n\nTipo: comentario multilinha | Linha: %d até linha %d\n", comentario_multilinha, count, linha);  
+            coluna+=yyleng;
+            break;         
             case loop_while:
             printf("\nToken: %s | Tipo: loop while | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
             coluna+=yyleng;
