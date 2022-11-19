@@ -4,22 +4,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef enum _TOKEN {
-    eof, x, invalido, espaco, id, li, lf, soma, subtracao,
-    igualdade, diferenca, comentario_1, comentario_2, 
-    loop_while, condicao_if, condicao_else, tipo_var, chamada_return, 
+typedef enum _TOKEN {                                                           
+    eof, x, invalido, espaco, id, li, lf, soma, subtracao,                          /* o token x é um token não utilizado */
+    igualdade, diferenca, comentario_1, comentario_2,                               /* definido para corrigir o problema do token "invalido"*/
+    loop_while, condicao_if, condicao_else, tipo_var, chamada_return,               /* possuir o mesmo valor de "ComentarioMultilinha" */
     chamada_fn, tipo_bool, tipo_int, tipo_float, bool_true, bool_false,
     newline, igual, abre_parenteses, fecha_parenteses, abre_chave,
     fecha_chave, ponto_virgula, virgula, ponto_ponto
 } TOKEN;
-int linha = 1;
-int coluna  = 1;
-int count = 0;
-char comentario_multilinha[1000000];
+int linha = 1;                                   /* contador de linhas */
+int coluna = 1;                                  /* contador de colunas */
+int contador_aninhado = 0;                       /* contador auxiliar para comentarios aninhados */
+int inicio_comentario = 0;                                /* armazena a linha inicial de comentarios multilinha */
+char comentario_multilinha[1000000];             /* string responsável por armazenar comentario multilinha para impressão no terminal */
 %}
 
-%x  MultipleLinesComment 
-
+%x  ComentarioMultilinha                         
+                                                 /* "ComentarioMultilinha" é um estado especial "contexto" do flex que serve para */
+                                                 /* aplicação de condição de começo para as expressoes regulares do comentario multilinha */
+                                                 
 IDENTIFICADOR       [a-zA-Z][a-zA-Z0-9_]*
 LITERAL_INTEIRO     [1-9][0-9]*
 LITERAL_FLOAT       [+-]?([0-9]*[.])?[0-9]+      
@@ -34,7 +37,7 @@ ELSE                else
 VAR                 var
 RETURN              return
 FN                  fn
-BOOL                boolean
+BOOL                bool
 INT                 int
 FLOAT               float
 TRUE                true
@@ -75,16 +78,16 @@ INVALIDO            (.)
 
 "/*"                        { for(int i = 0;i<strlen(comentario_multilinha);i++){
                                 comentario_multilinha[i]='\0';
-                            }   count=linha; BEGIN(MultipleLinesComment); strcat(comentario_multilinha, yytext); }
-<MultipleLinesComment>.      strcat(comentario_multilinha, yytext);
-<MultipleLinesComment>"\n"   linha++; strcat(comentario_multilinha, yytext);
-<MultipleLinesComment>"*/"   strcat(comentario_multilinha, yytext);{
+                            }   inicio_comentario=linha; BEGIN(ComentarioMultilinha); strcat(comentario_multilinha, yytext); }
+<ComentarioMultilinha>.      strcat(comentario_multilinha, yytext);
+<ComentarioMultilinha>"\n"   linha++; strcat(comentario_multilinha, yytext);
+<ComentarioMultilinha>"*/"   strcat(comentario_multilinha, yytext);{
                             BEGIN(INITIAL);
                             return comentario_2;
                             for(int i = 0;i<strlen(comentario_multilinha);i++){
                                 comentario_multilinha[i]='\0';
                             }
-                            count=0;
+                            inicio_comentario=0;
                         }
 
 {COMENTARIO_1}          { return comentario_1; }
@@ -105,11 +108,11 @@ INVALIDO            (.)
 int main(int argc, char *argv[])
 {
     yyin = fopen(argv[1], "r");
-    TOKEN tk;
-    while ( 1 ) {
+    TOKEN tk;                       /* token arbitrário que recebe o retorno da função yylex() */
+    while ( 1 ) {                   /* este loop termina quando o token retornado ppor yylex() representar EOF (fim do arquivo) */
         tk = (TOKEN) yylex();
-        switch (tk){
-            case eof:
+        switch (tk){                /* switch que verifica qual é o tipo de token retornado por yylex() e faz a devida */
+            case eof:               /* impressão e incremento de linhas e colunas                                      */
             return 0;
             case espaco:
             coluna+=yyleng;
@@ -148,7 +151,7 @@ int main(int argc, char *argv[])
             linha++;
             break;  
             case comentario_2:
-            printf("\nToken: %s \n\nTipo: comentario multilinha | Linha: %d até linha %d\n", comentario_multilinha, count, linha);  
+            printf("\nToken: %s \n\nTipo: comentario multilinha | Linha: %d até linha %d\n", comentario_multilinha, inicio_comentario, linha);  
             coluna+=yyleng;
             break;         
             case loop_while:
@@ -168,11 +171,11 @@ int main(int argc, char *argv[])
             coluna+=yyleng;
             break;        
             case tipo_bool:
-            printf("\nToken: %s | Tipo: tipo boleano | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
+            printf("\nToken: %s | Tipo: tipo booleano | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
             coluna+=yyleng;
             break;        
             case tipo_float:
-            printf("\nToken: %s | Tipo: tipo floar | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
+            printf("\nToken: %s | Tipo: tipo float | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
             coluna+=yyleng;
             break;        
             case tipo_int:
@@ -188,15 +191,15 @@ int main(int argc, char *argv[])
             coluna+=yyleng;
             break;        
             case bool_true:
-            printf("\nToken: %s | Tipo: boleano true | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
+            printf("\nToken: %s | Tipo: booleano true | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
             coluna+=yyleng;
             break;        
             case bool_false:
-            printf("\nToken: %s | Tipo: boleano false | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
+            printf("\nToken: %s | Tipo: booleano false | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
             coluna+=yyleng;
             break;     
             case igual:
-            printf("\nToken: %s | Tipo: operador de atribuição | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
+            printf("\nToken: %s | Tipo: operador de atribuicao | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
             coluna+=yyleng;
             break; 
             case abre_parenteses:
