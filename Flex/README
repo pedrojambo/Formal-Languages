@@ -1,0 +1,7 @@
+Commands:
+
+1 - flex FLEX.l
+
+2 - gcc lex.yy.c
+
+3 - ./a.out <fileName.c>
