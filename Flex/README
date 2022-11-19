@@ -4,4 +4,4 @@ Commands:
 
 2 - gcc lex.yy.c
 
-3 - ./a.out <fileName.c>
+3 - ./a.out <fileName.c>    
