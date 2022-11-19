@@ -5,10 +5,10 @@
 #include <stdlib.h>
 
 typedef enum _TOKEN {                                                           
-    eof, x, invalido, espaco, id, li, lf, soma, subtracao,                          /* o token x é um token não utilizado */
-    igualdade, diferenca, comentario_1, comentario_2,                               /* definido para corrigir o problema do token "invalido"*/
-    loop_while, condicao_if, condicao_else, tipo_var, chamada_return,               /* possuir o mesmo valor de "ComentarioMultilinha" */
-    chamada_fn, tipo_bool, tipo_int, tipo_float, bool_true, bool_false,
+    eof, invalido, espaco, id, li, lf, soma, subtracao,                           /* tokens enumerados , que coincidem com os caracteres  */
+    igualdade, diferenca, comentario_1, comentario_2,                             /* reconhecidos pela linguagem, a serem retornados pela */
+    loop_while, condicao_if, condicao_else, tipo_var, chamada_return,             /* yylex() apos serem identificados por suas respectivas*/
+    chamada_fn, tipo_bool, tipo_int, tipo_float, bool_true, bool_false,           /* expressões regulares */
     newline, igual, abre_parenteses, fecha_parenteses, abre_chave,
     fecha_chave, ponto_virgula, virgula, ponto_ponto
 } TOKEN;
@@ -24,7 +24,7 @@ char comentario_multilinha[1000000];             /* string responsável por arma
                                                  /* aplicação de condição de começo para as expressoes regulares do comentario multilinha */
                                                  
 IDENTIFICADOR       [a-zA-Z][a-zA-Z0-9_]*
-LITERAL_INTEIRO     [1-9][0-9]*
+LITERAL_INTEIRO     0|[1-9][0-9]*
 LITERAL_FLOAT       [+-]?([0-9]*[.])?[0-9]+      
 OPERADOR_SOMA        \+
 OPERADOR_SUBTRACAO   \-
