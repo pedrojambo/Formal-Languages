@@ -85,7 +85,7 @@ INVALIDO            (.)
   "/*"                { ++contador_aninhado; strcat(comentario_multilinha, yytext); }
   "*"+"/"             { strcat(comentario_multilinha, yytext);
                         if (contador_aninhado) --contador_aninhado;
-                        else BEGIN(INITIAL); return comentario_2; inicio_comentario=0; }
+                        else {BEGIN(INITIAL); return comentario_2;}}
   "*"+                 ; strcat(comentario_multilinha, yytext);
   [^/*\n]+             ; strcat(comentario_multilinha, yytext);
   [/]                  ; strcat(comentario_multilinha, yytext);
