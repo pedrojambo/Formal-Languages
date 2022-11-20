@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
             coluna+=yyleng;
             break;        
             case diferenca:
-            printf("\nToken: %s | Tipo: operador subtracao | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
+            printf("\nToken: %s | Tipo: operador diferenca | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
             coluna+=yyleng;
             break;        
             case igualdade:
@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
             coluna+=yyleng;
             break;        
             case subtracao:
-            printf("\nToken: %s | Tipo: operador diferenca | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
+            printf("\nToken: %s | Tipo: operador subtracao | Linha: %d | Coluna: %d\n", yytext, linha, coluna);
             coluna+=yyleng;
             break;        
             case comentario_1:
