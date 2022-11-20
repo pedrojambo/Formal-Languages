@@ -12,15 +12,15 @@ typedef enum _TOKEN {
     newline, igual, abre_parenteses, fecha_parenteses, abre_chave,
     fecha_chave, ponto_virgula, virgula, ponto_ponto
 } TOKEN;
-int linha = 1;                                   /* contador de linhas */
-int coluna = 1;                                  /* contador de colunas */
-int contador_aninhado = 0;                       /* contador auxiliar para comentarios aninhados */
-int inicio_comentario = 0;                       /* armazena a linha inicial de comentarios multilinha */
-char comentario_multilinha[1000000];             /* string responsável por armazenar comentario multilinha para impressão no terminal */
+int linha = 1;                                                                    /* contador de linhas */
+int coluna = 1;                                                                   /* contador de colunas */
+int contador_aninhado = 0;                                                        /* contador auxiliar para comentarios aninhados */
+int inicio_comentario = 0;                                                        /* armazena a linha inicial de comentarios multilinha */
+char comentario_multilinha[1000000];                                              /* string responsável por armazenar comentario multilinha para impressão no terminal */
 %}
 
 %x  ComentarioMultilinha                         
-                                                 /* "ComentarioMultilinha" é um estado especial "contexto" do flex que serve para */
+                                                 /* "ComentarioMultilinha" é um estado especial "contexto" do flex que serve para         */
                                                  /* aplicação de condição de começo para as expressoes regulares do comentario multilinha */
                                                  
 IDENTIFICADOR       [a-zA-Z][a-zA-Z0-9_]*
@@ -110,12 +110,12 @@ INVALIDO            (.)
 int main(int argc, char *argv[])
 {
     yyin = fopen(argv[1], "r");
-    TOKEN tk;                       /* token arbitrário que recebe o retorno da função yylex() */
-    while ( 1 ) {                   /* este loop termina quando o token retornado ppor yylex() representar EOF (fim do arquivo) */
+    TOKEN tk;                                        /* token arbitrário que recebe o retorno da função yylex() */
+    while ( 1 ) {                                    /* este loop termina quando o token retornado ppor yylex() representar EOF (fim do arquivo) */
         tk = (TOKEN) yylex();
-        switch (tk){                /* switch que verifica qual é o tipo de token retornado por yylex() e faz a devida */
-            case eof:               /* impressão e incremento de linhas e colunas                                      */
-            return 0;
+        switch (tk){                                 /* switch que verifica qual é o tipo de token retornado por yylex() e faz a devida impressão e incremento de linhas e colunas */
+            case eof:                                 
+            return 0;                                /* termina o programa caso fim do arquivo seja detectado */
             case espaco:
             coluna+=yyleng;
             break;        
