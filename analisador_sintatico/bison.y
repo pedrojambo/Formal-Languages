@@ -84,13 +84,13 @@ sequencia_variavel: /* vazia */
  | variavel { /* faz algo */ }
  ;
 
-comandos: atribuição ponto_virgula { /* faz algo */ }
+comandos: atribuicao ponto_virgula { /* faz algo */ }
  | condicional { /* faz algo */ }
  | laco { /* faz algo */ }
  | retorno ponto_virgula{ /* faz algo */ }
  ;
 
-atribuição: id igual exp
+atribuicao: id igual exp
  ;
 
 exp: fator
