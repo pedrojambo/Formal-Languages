@@ -120,7 +120,7 @@ comparador: igualdade { /* faz algo */ }
  | diferenca { /* faz algo */ }
  ;
 
-laco: while abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave
+laco: loop_while abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave
  ;
 
 retorno: chamada_return exp
