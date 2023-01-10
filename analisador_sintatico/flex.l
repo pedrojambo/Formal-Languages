@@ -4,7 +4,11 @@
 
 #include "bison.tab.h"
 
-                                                     /* armazena a linha inicial de comentarios multilinha */
+int linha = 1;                                                                    /* contador de linhas */
+int coluna = 1;                                                                   /* contador de colunas */
+int contador_aninhado = 0;                                                        /* contador auxiliar para comentarios aninhados */
+int inicio_comentario = 0;                                                        /* armazena a linha inicial de comentarios multilinha */
+
 %}
 
 
