@@ -52,7 +52,7 @@ declaracao: funcao { printf("funcao --> declaracao\n"); }
 variavel: var id ponto_ponto tipo igual exp ponto_virgula { printf("input vazio --> variavel\n"); }
  ;
 
-funcao: chamada_fn id abre_parenteses parametros fecha_parenteses ponto_ponto tipo ponto_ponto tipo abre_chave definicao fecha_chave ponto_virgula { /* faz algo */ }
+funcao: chamada_fn id abre_parenteses parametros fecha_parenteses ponto_ponto tipo abre_chave definicao fecha_chave { /* faz algo */ }
  ;
 
 tipo: tipo_bool { /* faz algo */ }
@@ -71,6 +71,11 @@ definicao: sequencia_variavel sequencia_comandos { /* faz algo */ }
 sequencia_variavel: /* vazia */
  | sequencia_variavel variavel { /* faz algo */ }
  | variavel { /* faz algo */ }
+ ;
+
+sequencia_comandos:  /* vazia */
+ | sequencia_comandos comandos { /* faz algo */ }
+ | comandos
  ;
 
 comandos: atribuicao ponto_virgula { /* faz algo */ }
@@ -111,12 +116,7 @@ laco: loop_while abre_parenteses condicao fecha_parenteses abre_chave sequencia_
 
 retorno: chamada_return exp
  ;
-
-sequencia_comandos:  /* vazia */
- | sequencia_comandos comandos { /* faz algo */ }
- | comandos
- ;
-
+ 
 %%
 main(int argc, char *argv[])
 {
