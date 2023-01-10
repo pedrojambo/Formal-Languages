@@ -41,8 +41,8 @@ iput: /* vazio */
  | declaracao ponto_virgula input{ /* faz algo */ }
  ;
 
-declaracao: funcao { /* faz algo */ }
- | variavel { /* faz algo */ }
+declaracao: funcao { printf("declaracao de funcao") }
+ | variavel { printf("declaracao de variavel") }
  ;
 
 variavel: var id ponto_ponto tipo_int igual valor_int ponto_virgula { /* faz algo */ }
@@ -63,13 +63,74 @@ valor_int: /* vazio */
  | bool_false { /* faz algo */ }
  ; 
 
-funcao: chamada_fn id  { /* faz algo */ }
- |  { /* faz algo */ }
+funcao: chamada_fn id abre_parenteses parametros fecha_parenteses ponto_ponto tipo ponto_ponto tipo abre_chave definicao fecha_chave ponto_virgula { /* faz algo */ }
  ;
 
-term: NUMBER 
- | ABS term   { $$ = $2 >= 0? $2 : - $2; }
-;
+ tipo: tipo_bool
+ | tipo_float { /* faz algo */ }
+ | tipo_int { /* faz algo */ }
+ ;
+
+parametros: /* vazia */
+ | parametros virgula id tipo { /* faz algo */ }
+ | virgula id tipo { /* faz algo */ }
+ ;
+
+definicao: sequencia_variavel sequencia_comandos { /* faz algo */ }
+ ;
+
+sequencia_variavel: /* vazia */
+ | sequencia_variavel variavel { /* faz algo */ }
+ | variavel { /* faz algo */ }
+ ;
+
+comandos: atribuição ponto_virgula { /* faz algo */ }
+ | condicional { /* faz algo */ }
+ | laco { /* faz algo */ }
+ | retorno ponto_virgula{ /* faz algo */ }
+ ;
+
+atribuição: id igual exp
+ ;
+
+exp: fator
+ | exp soma fator { /* faz algo */ }
+ | exp subtracao fator { /* faz algo */ }
+ ;
+
+fator: li { /* faz algo */ }
+ | lf { /* faz algo */ }
+ | id { /* faz algo */ } 
+ ;
+
+condicional: if abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave else abre_chave sequencia_comandos fecha_chave { /* faz algo */ }
+ | if abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave { /* faz algo */ }
+ ;
+
+condicao: id comparador id { /* faz algo */ }
+ | id comparador li { /* faz algo */ }
+ | id comparador lf { /* faz algo */ }
+ | li comparador id { /* faz algo */ }
+ | lf comparador id { /* faz algo */ }
+ | li comparador li { /* faz algo */ }
+ | lf comparador lf { /* faz algo */ }
+ ;
+
+comparador: igualdade { /* faz algo */ }
+ | diferenca { /* faz algo */ }
+ ;
+
+laco: while abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave
+ ;
+
+retorno: return exp
+ ;
+
+sequencia_comandos:  /* vazia */
+ | sequencia_comandos comandos { /* faz algo */ }
+ | comandos
+ ;
+
 %%
 main(int argc, char **argv)
 {

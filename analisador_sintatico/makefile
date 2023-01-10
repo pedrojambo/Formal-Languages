@@ -7,6 +7,6 @@ lex.yy.o: lex.yy.c bison.tab.h
 lex.yy.c: flex.l bison.tab.h
 	flex flex.l
 
-calc.tab.h calc.tab.c: bison.y
+bison.tab.h bison.tab.c: bison.y
 	bison -d bison.y
 
