@@ -37,8 +37,8 @@
 
 %%
 
-input: /* vazio */
- | declaracao ponto_virgula input{ /* faz algo */ }
+input: /* vazio */ { printf("input vazio"); }
+ | declaracao ponto_virgula input { printf("declaracao: "); }
  ;
 
 declaracao: funcao { printf("declaracao de funcao"); }
