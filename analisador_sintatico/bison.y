@@ -37,7 +37,7 @@
 
 %%
 
-iput: /* vazio */
+input: /* vazio */
  | declaracao ponto_virgula input{ /* faz algo */ }
  ;
 
@@ -54,11 +54,11 @@ valor_int: /* vazio */
  | li { /* faz algo */ }
  ; 
 
- valor_float: /* vazio */
+valor_float: /* vazio */
  | lf { /* faz algo */ }
  ; 
 
- valor_boolean: /* vazio */
+valor_boolean: /* vazio */
  | bool_true { /* faz algo */ }
  | bool_false { /* faz algo */ }
  ; 
@@ -103,8 +103,8 @@ fator: li { /* faz algo */ }
  | id { /* faz algo */ } 
  ;
 
-condicional: if abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave else abre_chave sequencia_comandos fecha_chave { /* faz algo */ }
- | if abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave { /* faz algo */ }
+condicional: condicao_if abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave condicao_else abre_chave sequencia_comandos fecha_chave { /* faz algo */ }
+ | condicao_if abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave { /* faz algo */ }
  ;
 
 condicao: id comparador id { /* faz algo */ }
@@ -123,7 +123,7 @@ comparador: igualdade { /* faz algo */ }
 laco: while abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave
  ;
 
-retorno: return exp
+retorno: chamada_return exp
  ;
 
 sequencia_comandos:  /* vazia */
