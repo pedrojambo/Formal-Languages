@@ -41,8 +41,8 @@ input: /* vazio */
  | declaracao ponto_virgula input{ /* faz algo */ }
  ;
 
-declaracao: funcao { printf("declaracao de funcao") }
- | variavel { printf("declaracao de variavel") }
+declaracao: funcao { printf("declaracao de funcao"); }
+ | variavel { printf("declaracao de variavel"); }
  ;
 
 variavel: var id ponto_ponto tipo_int igual valor_int ponto_virgula { /* faz algo */ }
