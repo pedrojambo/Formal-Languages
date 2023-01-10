@@ -41,31 +41,18 @@ extern FILE *yyout;
 
 %%
 
-input: /* vazio */ { printf("input vazio\n"); }
- |  input ponto_virgula declaracao { /* faz algo */ }
+input: /* vazio */ { printf("input vazio --> input"); }
+ |  input declaracao { printf("ponto_virgula declaracao --> input"); }
  ;
 
-declaracao: funcao { printf("declaracao de funcao: \n"); }
- | variavel { printf("declaracao de variavel: \n"); }
+declaracao: funcao { printf("funcao --> declaracao"); }
+ | variavel { printf("variavel --> declaracao"); }
  ;
 
-variavel: var id ponto_ponto tipo_int igual valor_int ponto_virgula { /* faz algo */ }
- | var id ponto_ponto tipo_float igual valor_float ponto_virgula { /* faz algo */ }
- | var id ponto_ponto tipo_bool igual valor_boolean ponto_virgula { /* faz algo */ }
+variavel: var id ponto_ponto tipo_int igual exp ponto_virgula { printf("input vazio --> variavel"); }
+ | var id ponto_ponto tipo_float igual exp ponto_virgula { /* faz algo */ }
+ | var id ponto_ponto tipo_bool igual exp ponto_virgula { /* faz algo */ }
  ;
-
-valor_int: /* vazio */
- | li { /* faz algo */ }
- ; 
-
-valor_float: /* vazio */
- | lf { /* faz algo */ }
- ; 
-
-valor_boolean: /* vazio */
- | bool_true { /* faz algo */ }
- | bool_false { /* faz algo */ }
- ; 
 
 funcao: chamada_fn id abre_parenteses parametros fecha_parenteses ponto_ponto tipo ponto_ponto tipo abre_chave definicao fecha_chave ponto_virgula { /* faz algo */ }
  ;
