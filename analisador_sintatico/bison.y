@@ -1,6 +1,16 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+
+extern int yylex();
+extern FILE *yyin;
+extern FILE *yyout;
+
+void yyerror(char *s)
+{
+  fprintf(stderr, "error: %s\n", s);
+}
+
 %}
 
 /* declare tokens */
@@ -37,38 +47,27 @@
 
 %%
 
-input: /* vazio */ { printf("input vazio"); }
- | declaracao ponto_virgula input { printf("declaracao: "); }
+input: /* vazio */ { printf("input vazio --> input\n"); }
+ | declaracao { printf("declaracao --> input\n"); }
+ | input declaracao { printf("input declaracao --> input\n"); }
  ;
 
-declaracao: funcao { printf("declaracao de funcao"); }
- | variavel { printf("declaracao de variavel"); }
+declaracao: funcao { printf("funcao --> declaracao\n"); }
+ | variavel { printf("variavel --> declaracao\n"); }
  ;
 
-variavel: var id ponto_ponto tipo_int igual valor_int ponto_virgula { /* faz algo */ }
- | var id ponto_ponto tipo_float igual valor_float ponto_virgula { /* faz algo */ }
- | var id ponto_ponto tipo_bool igual valor_boolean ponto_virgula { /* faz algo */ }
+//variavel: var id ponto_ponto tipo igual exp ponto_virgula { printf("com init --> variavel\n"); }
+// ;
+
+variavel: var id ponto_virgula { printf("sem initi --> variavel\n"); }
  ;
 
-valor_int: /* vazio */
- | li { /* faz algo */ }
- ; 
-
-valor_float: /* vazio */
- | lf { /* faz algo */ }
- ; 
-
-valor_boolean: /* vazio */
- | bool_true { /* faz algo */ }
- | bool_false { /* faz algo */ }
- ; 
-
-funcao: chamada_fn id abre_parenteses parametros fecha_parenteses ponto_ponto tipo ponto_ponto tipo abre_chave definicao fecha_chave ponto_virgula { /* faz algo */ }
+funcao: chamada_fn id abre_parenteses parametros fecha_parenteses ponto_ponto tipo abre_chave definicao fecha_chave ponto_virgula { /* faz algo */ }
  ;
 
- tipo: tipo_bool
+tipo: tipo_bool { /* faz algo */ }
  | tipo_float { /* faz algo */ }
- | tipo_int { /* faz algo */ }
+ | tipo_int { printf("tipo int --> tipo\n"); }
  ;
 
 parametros: /* vazia */
@@ -84,6 +83,11 @@ sequencia_variavel: /* vazia */
  | variavel { /* faz algo */ }
  ;
 
+sequencia_comandos:  /* vazia */
+ | sequencia_comandos comandos { /* faz algo */ }
+ | comandos
+ ;
+
 comandos: atribuicao ponto_virgula { /* faz algo */ }
  | condicional { /* faz algo */ }
  | laco { /* faz algo */ }
@@ -96,24 +100,21 @@ atribuicao: id igual exp
 exp: fator
  | exp soma fator { /* faz algo */ }
  | exp subtracao fator { /* faz algo */ }
+ | abre_parenteses exp fecha_parenteses { /* faz algo */ }
  ;
 
 fator: li { /* faz algo */ }
  | lf { /* faz algo */ }
  | id { /* faz algo */ } 
+ | bool_true { /* faz algo */ } 
+ | bool_false { /* faz algo */ } 
  ;
 
 condicional: condicao_if abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave condicao_else abre_chave sequencia_comandos fecha_chave { /* faz algo */ }
  | condicao_if abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave { /* faz algo */ }
  ;
 
-condicao: id comparador id { /* faz algo */ }
- | id comparador li { /* faz algo */ }
- | id comparador lf { /* faz algo */ }
- | li comparador id { /* faz algo */ }
- | lf comparador id { /* faz algo */ }
- | li comparador li { /* faz algo */ }
- | lf comparador lf { /* faz algo */ }
+condicao: exp comparador exp { /* faz algo */ }
  ;
 
 comparador: igualdade { /* faz algo */ }
@@ -125,19 +126,27 @@ laco: loop_while abre_parenteses condicao fecha_parenteses abre_chave sequencia_
 
 retorno: chamada_return exp
  ;
-
-sequencia_comandos:  /* vazia */
- | sequencia_comandos comandos { /* faz algo */ }
- | comandos
- ;
-
+ 
 %%
-main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
-  yyparse();
+  if (argc == 1)
+    yyparse();
+
+  if (argc == 2) {
+    yyin = fopen(argv[1], "r");
+    yyparse();
+  }
+
+  if (argc == 3) {
+
+   yyout = fopen(argv[2],"w");
+
+   yyin = fopen(argv[1], "r");
+   yyparse();
+   fclose(yyout);
+  }
+
+  return 0;
 }
 
-yyerror(char *s)
-{
-  fprintf(stderr, "error: %s\n", s);
-}
