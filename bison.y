@@ -5,6 +5,12 @@
 extern int yylex();
 extern FILE *yyin;
 extern FILE *yyout;
+
+void yyerror(char *s)
+{
+  fprintf(stderr, "error: %s\n", s);
+}
+
 %}
 
 /* declare tokens */
@@ -42,7 +48,8 @@ extern FILE *yyout;
 %%
 
 input: /* vazio */ { printf("input vazio --> input\n"); }
- |  input declaracao { printf("ponto_virgula declaracao --> input\n"); }
+ | input declaracao { printf("input declaracao --> input\n"); }
+ | declaracao { printf("declaracao --> input\n"); }
  ;
 
 declaracao: funcao { printf("funcao --> declaracao\n"); }
@@ -52,7 +59,7 @@ declaracao: funcao { printf("funcao --> declaracao\n"); }
 variavel: var id ponto_ponto tipo igual exp ponto_virgula { printf("input vazio --> variavel\n"); }
  ;
 
-funcao: chamada_fn id abre_parenteses parametros fecha_parenteses ponto_ponto tipo abre_chave definicao fecha_chave { /* faz algo */ }
+funcao: chamada_fn id abre_parenteses parametros fecha_parenteses ponto_ponto tipo abre_chave definicao fecha_chave ponto_virgula { /* faz algo */ }
  ;
 
 tipo: tipo_bool { /* faz algo */ }
@@ -118,7 +125,7 @@ retorno: chamada_return exp
  ;
  
 %%
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   if (argc == 1)
     yyparse();
@@ -141,7 +148,3 @@ main(int argc, char *argv[])
 }
 
 
-yyerror(char *s)
-{
-  fprintf(stderr, "error: %s\n", s);
-}
