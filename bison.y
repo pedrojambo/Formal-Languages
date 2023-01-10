@@ -48,15 +48,18 @@ void yyerror(char *s)
 %%
 
 input: /* vazio */ { printf("input vazio --> input\n"); }
- | input declaracao { printf("input declaracao --> input\n"); }
  | declaracao { printf("declaracao --> input\n"); }
+ | input declaracao { printf("input declaracao --> input\n"); }
  ;
 
 declaracao: funcao { printf("funcao --> declaracao\n"); }
  | variavel { printf("variavel --> declaracao\n"); }
  ;
 
-variavel: var id ponto_ponto tipo igual exp ponto_virgula { printf("input vazio --> variavel\n"); }
+//variavel: var id ponto_ponto tipo igual exp ponto_virgula { printf("com init --> variavel\n"); }
+// ;
+
+variavel: var id ponto_virgula { printf("sem initi --> variavel\n"); }
  ;
 
 funcao: chamada_fn id abre_parenteses parametros fecha_parenteses ponto_ponto tipo abre_chave definicao fecha_chave ponto_virgula { /* faz algo */ }
@@ -64,7 +67,7 @@ funcao: chamada_fn id abre_parenteses parametros fecha_parenteses ponto_ponto ti
 
 tipo: tipo_bool { /* faz algo */ }
  | tipo_float { /* faz algo */ }
- | tipo_int { /* faz algo */ }
+ | tipo_int { printf("tipo int --> tipo\n"); }
  ;
 
 parametros: /* vazia */
