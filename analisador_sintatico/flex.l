@@ -2,12 +2,13 @@
 
 %{
 
-#include "bison.tab.h"
+#include "bison1.tab.h"
 
 int linha = 1;                                                                    /* contador de linhas */
 int coluna = 1;                                                                   /* contador de colunas */
 int contador_aninhado = 0;                                                        /* contador auxiliar para comentarios aninhados */
 int inicio_comentario = 0;                                                        /* armazena a linha inicial de comentarios multilinha */
+
 
 %}
 
@@ -16,9 +17,9 @@ int inicio_comentario = 0;                                                      
                                                  /* "ComentarioMultilinha" é um estado especial "contexto" do flex que serve para         */
                                                  /* aplicação de condição de começo para as expressoes regulares do comentario multilinha */
                                                  
-IDENTIFICADOR       [_]*[a-zA-Z][a-zA-Z0-9_]*
+IDENTIFICADOR       [a-zA-Z_][a-zA-Z0-9_]*
 LITERAL_INTEIRO     0|[1-9][0-9]*
-LITERAL_FLOAT       [+-]?([0-9]*[.])?[0-9]+      
+LITERAL_FLOAT       [-]?([0-9]*[.])?[0-9]+      
 OPERADOR_SOMA        \+
 OPERADOR_SUBTRACAO   \-
 OPERADOR_IGUALDADE  \=\=
@@ -49,7 +50,7 @@ INVALIDO            (.)
 
 %%
 
-<<EOF>>                 { return eof; }
+<<EOF>>                 { return 0; }
 {LITERAL_INTEIRO}       { return li; }
 {LITERAL_FLOAT}         { return lf; }
 {OPERADOR_SOMA}         { return soma; }
@@ -90,8 +91,8 @@ INVALIDO            (.)
 {PONTO_VIRGULA}         { return ponto_virgula; }
 {VIRGULA}               { return virgula; }
 {PONTO_PONTO}           { return ponto_ponto; }
-{ESPACO}                { return espaco; }
-{NEWLINE}               { return newline; }
+{ESPACO}                { }
+{NEWLINE}               { }
 {INVALIDO}              { return invalido; }
 
 %%

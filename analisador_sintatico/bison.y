@@ -12,7 +12,6 @@ void yyerror(char *s)
 }
 
 %}
-
 /* declare tokens */
 %token eof
 %token li
@@ -41,7 +40,6 @@ void yyerror(char *s)
 %token ponto_virgula
 %token virgula
 %token ponto_ponto
-%token espaco
 %token newline
 %token invalido
 
@@ -56,77 +54,71 @@ declaracao: funcao { printf("funcao --> declaracao\n"); }
  | variavel { printf("variavel --> declaracao\n"); }
  ;
 
-//variavel: var id ponto_ponto tipo igual exp ponto_virgula { printf("com init --> variavel\n"); }
-// ;
+variavel: var id ponto_ponto tipo igual exp ponto_virgula { printf("com init --> variavel\n"); }
+ | var id ponto_ponto tipo ponto_virgula { printf("sem initi --> variavel\n"); }
+ ; 
 
-variavel: var id ponto_virgula { printf("sem initi --> variavel\n"); }
+funcao: chamada_fn id abre_parenteses parametros fecha_parenteses ponto_ponto tipo abre_chave definicao fecha_chave ponto_virgula {printf("chamada_fn id abre_parenteses parametros fecha_parenteses ponto_ponto tipo abre_chave definicao fecha_chave ponto_virgula --> funcao\n");}
  ;
 
-funcao: chamada_fn id abre_parenteses parametros fecha_parenteses ponto_ponto tipo abre_chave definicao fecha_chave ponto_virgula { /* faz algo */ }
- ;
-
-tipo: tipo_bool { /* faz algo */ }
- | tipo_float { /* faz algo */ }
- | tipo_int { printf("tipo int --> tipo\n"); }
- ;
+ tipo: tipo_bool { printf("tipo_bool --> tipo\n"); }
+  | tipo_float { printf("tipo_float --> tipo\n");}
+  | tipo_int { printf("tipo int --> tipo\n"); }
+  ;
 
 parametros: /* vazia */
- | parametros virgula id tipo { /* faz algo */ }
- | virgula id tipo { /* faz algo */ }
+ | id tipo virgula parametros { printf("parametros id tipo virgula --> parametros\n"); }
+ | id tipo { printf("id tipo virgula --> parametros\n"); }
  ;
 
-definicao: sequencia_variavel sequencia_comandos { /* faz algo */ }
+definicao:  /* vazia */
+ | sequencia_variavel sequencia_comandos { printf("sequencia_variavel sequecia_comandos --> definicao\n"); }
  ;
 
 sequencia_variavel: /* vazia */
- | sequencia_variavel variavel { /* faz algo */ }
- | variavel { /* faz algo */ }
+ | sequencia_variavel variavel          { printf("sequecia_variavel variavel --> sequencia_variavel\n"); }
+ | variavel                             { printf("variavel --> sequencia_variavel\n"); }
  ;
 
 sequencia_comandos:  /* vazia */
- | sequencia_comandos comandos { /* faz algo */ }
- | comandos
+ | sequencia_comandos comandos          { printf("sequecia_comandos comandos --> sequencia_comandos\n"); }
+ | comandos                             { printf("comandos --> sequencia_comandos\n"); }
  ;
 
-comandos: atribuicao ponto_virgula { /* faz algo */ }
- | condicional { /* faz algo */ }
- | laco { /* faz algo */ }
- | retorno ponto_virgula{ /* faz algo */ }
+comandos: atribuicao                    { printf("atribuicao ponto_virgula --> comandos\n"); }
+ | condicional                          { printf("condicional --> comandos\n"); }
+ | laco                                 { printf("laco --> comandos\n"); }
+ | chamada_return exp ponto_virgula     { printf("chamada_return exp --> retorno\n"); }
  ;
 
-atribuicao: id igual exp
+atribuicao: id igual exp ponto_virgula  { printf("idigual exp ponto_virgula --> atribuicao\n"); }
  ;
 
-exp: fator
- | exp soma fator { /* faz algo */ }
- | exp subtracao fator { /* faz algo */ }
- | abre_parenteses exp fecha_parenteses { /* faz algo */ }
+exp: id                                 { printf("id --> exp\n"); } 
+ | li                                   { printf("valor int --> exp\n"); }
+ | lf                                   { printf("valor float --> exp\n"); }
+ | bool_false                           { printf("valor false --> exp\n"); }
+ | bool_true                            { printf("valor true --> exp\n"); }
+ | exp soma exp                         { printf("exp soma exp --> exp\n"); }
+ | exp subtracao exp                    { printf("exp subtracao exp- --> exp\n"); }
+ | abre_parenteses exp fecha_parenteses { printf("abre_parenteses exp fecha_parenteses --> exp\n"); }
  ;
 
-fator: li { /* faz algo */ }
- | lf { /* faz algo */ }
- | id { /* faz algo */ } 
- | bool_true { /* faz algo */ } 
- | bool_false { /* faz algo */ } 
+condicional: condicao_if abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave condicao_else abre_chave sequencia_comandos fecha_chave { { printf("condicao_if abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave condicao_else abre_chave sequencia_comandos fecha_chave --> condicional\n"); } }
+ | condicao_if abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave { printf("condicao_if abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave --> condicional\n"); }
  ;
 
-condicional: condicao_if abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave condicao_else abre_chave sequencia_comandos fecha_chave { /* faz algo */ }
- | condicao_if abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave { /* faz algo */ }
+condicao: exp comparador exp            { printf("exp comparador exp --> condicao while\n"); }
+ | bool_true                            { printf("true --> condicao while\n"); }
  ;
 
-condicao: exp comparador exp { /* faz algo */ }
+comparador: igualdade                   { printf("igualdade --> comparador\n"); }
+ | diferenca                            { printf("diferenca --> comparador\n"); }
  ;
 
-comparador: igualdade { /* faz algo */ }
- | diferenca { /* faz algo */ }
+laco: loop_while abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave { printf("loop_while abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave --> laco\n"); }
  ;
 
-laco: loop_while abre_parenteses condicao fecha_parenteses abre_chave sequencia_comandos fecha_chave
- ;
-
-retorno: chamada_return exp
- ;
- 
 %%
 int main(int argc, char *argv[])
 {
@@ -137,16 +129,5 @@ int main(int argc, char *argv[])
     yyin = fopen(argv[1], "r");
     yyparse();
   }
-
-  if (argc == 3) {
-
-   yyout = fopen(argv[2],"w");
-
-   yyin = fopen(argv[1], "r");
-   yyparse();
-   fclose(yyout);
-  }
-
-  return 0;
 }
 
