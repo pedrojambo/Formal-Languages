@@ -2,7 +2,7 @@
 
 %{
 
-#include "bison1.tab.h"
+#include "bison.tab.h"
 
 int linha = 1;                                                                    /* contador de linhas */
 int coluna = 1;                                                                   /* contador de colunas */
