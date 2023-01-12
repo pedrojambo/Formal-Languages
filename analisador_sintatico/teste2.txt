@@ -1,4 +1,4 @@
-fn aluga (arthur bool) : int {
+fn aluga (gustavo bool) : int {
     var x : int;
     var y : float = -1;
 };
@@ -10,16 +10,18 @@ fn paga (pedro bool) : float {
 
 //comentario
 
-fn vende (yuri float) : bool {
-    arthur = true;
+fn vende (valor float) : bool {
+    bruna = true;
     while (x == y) {
         if (true) {
-            julia = 3;
+            pedro = 3;
+            return 0;
         }
         else{
-            joao=2+2;
-        }
-    }
+            gustavo = 2 + 2;
+        };
+    };
+    if (bruna != gustavo) { return 0; };
 };
 
 /* oi /* comentario dentro de comentario */ tchau */

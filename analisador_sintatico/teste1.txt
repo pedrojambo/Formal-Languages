@@ -1,7 +1,6 @@
 var x : int;
 var y : float = -1;
-var yuri  : int = 1+2;
-var hugo  : int = 2 + 39 - 2;
-//var artu  : float = 3 + 2-4; OBS: nao funciona pois -4 é um valor e não uma operação. - 4 é uma operação.
-var bruna : bool = true;
-var gusta : bool;
+var z : bool;
+var bruna    : int = 1 + 2;
+var gustavo  : int = 2 + 39 - 2;
+var pedro    : bool = true;
